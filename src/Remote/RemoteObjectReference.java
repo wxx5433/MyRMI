@@ -1,6 +1,6 @@
 package Remote;
 
-import Util.Stub;
+import Stub.Stub;
 
 /**
  * @author Xiaoxiang Wu(xiaoxiaw)
@@ -9,14 +9,14 @@ import Util.Stub;
 public class RemoteObjectReference {
 	private String hostIP;
 	private int port;
-	private int objectKey;
+	private long objectKey;
 	private String remoteInterfaceName;
 	
 	public RemoteObjectReference(String ip, int port, String riname) {
 		this.hostIP = ip;
 		this.port = port;
 		this.remoteInterfaceName = riname;
-		this.objectKey = 0;
+		this.objectKey = 0L;
 	}
 	
 	/**
@@ -65,11 +65,11 @@ public class RemoteObjectReference {
 		this.port = port;
 	}
 
-	public int getObjectKey() {
+	public long getObjectKey() {
 		return objectKey;
 	}
 
-	public void setObjectKey(int objectKey) {
+	public void setObjectKey(long objectKey) {
 		this.objectKey = objectKey;
 	}
 
