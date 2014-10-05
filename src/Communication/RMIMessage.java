@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import Remote.Remote640;
-import Remote.RemoteObjectReference;
 
 public class RMIMessage implements Serializable {
 	private static final long serialVersionUID = 5927860882914402321L;
@@ -13,21 +12,27 @@ public class RMIMessage implements Serializable {
 	 * The method name to invoke. 
 	 * Look up the table to find the object
 	 */
-	private RemoteObjectReference ROR;
+	private String remoteInterfaceName;
+	private long objectKey;
 	private String methodName;
 	private Object[] args;
 	private Object returnValue;
 	private Exception exception;
 	
 	
-	public RMIMessage(String methodName, RemoteObjectReference ror, Object[] args) {
-		this.methodName = methodName;
-		this.args = args;
-		setROR(ror);
-		returnValue = null;
-		exception = null;
+	public RMIMessage(String riName, String methodName, Object[] args) {
+		this(riName, 0L, methodName, args);
 	}
-	
+
+	public RMIMessage(String riName, long objectKey, String methodName, Object[] args) {
+		setRemoteInterfaceName(riName);
+		setObjectKey(objectKey);
+		setMethodName(methodName);
+		setArgs(args);
+		setReturnValue(null);
+		setException(null);
+	}
+
 	/**
 	 * This method should be invoked by the server.
 	 * Then the server will call the specific method locally,
@@ -63,6 +68,34 @@ System.out.println("argsType: " + argsTypes[i]);
 	
 	
 	
+	/**
+	 * @return the remoteInterfaceName
+	 */
+	public String getRemoteInterfaceName() {
+		return remoteInterfaceName;
+	}
+
+	/**
+	 * @param remoteInterfaceName the remoteInterfaceName to set
+	 */
+	public void setRemoteInterfaceName(String remoteInterfaceName) {
+		this.remoteInterfaceName = remoteInterfaceName;
+	}
+
+	/**
+	 * @return the objectKey
+	 */
+	public long getObjectKey() {
+		return objectKey;
+	}
+
+	/**
+	 * @param objectKey the objectKey to set
+	 */
+	public void setObjectKey(long objectKey) {
+		this.objectKey = objectKey;
+	}
+
 	public String getMethodName() {
 		return methodName;
 	}
@@ -94,13 +127,4 @@ System.out.println("argsType: " + argsTypes[i]);
 	public void setException(Exception exception) {
 		this.exception = exception;
 	}
-
-	public RemoteObjectReference getROR() {
-		return ROR;
-	}
-
-	public void setROR(RemoteObjectReference ror) {
-		ROR = ror;
-	}
-
 }
