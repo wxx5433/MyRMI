@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import Remote.Remote640;
+import Remote.RemoteObjectReference;
 
 public class RMIMessage implements Serializable {
 	private static final long serialVersionUID = 5927860882914402321L;
@@ -12,21 +13,14 @@ public class RMIMessage implements Serializable {
 	 * The method name to invoke. 
 	 * Look up the table to find the object
 	 */
-	private String remoteInterfaceName;
-	private long objectKey;
 	private String methodName;
+	private RemoteObjectReference ROR;
 	private Object[] args;
 	private Object returnValue;
 	private Exception exception;
 	
-	
-	public RMIMessage(String riName, String methodName, Object[] args) {
-		this(riName, 0L, methodName, args);
-	}
-
-	public RMIMessage(String riName, long objectKey, String methodName, Object[] args) {
-		setRemoteInterfaceName(riName);
-		setObjectKey(objectKey);
+	public RMIMessage(RemoteObjectReference ror, String methodName, Object[] args) {
+		setROR(ror);
 		setMethodName(methodName);
 		setArgs(args);
 		setReturnValue(null);
@@ -66,42 +60,26 @@ System.out.println("argsType: " + argsTypes[i]);
 		returnValue = method.invoke(object, args);
 	}
 	
-	
-	
-	/**
-	 * @return the remoteInterfaceName
-	 */
-	public String getRemoteInterfaceName() {
-		return remoteInterfaceName;
-	}
-
-	/**
-	 * @param remoteInterfaceName the remoteInterfaceName to set
-	 */
-	public void setRemoteInterfaceName(String remoteInterfaceName) {
-		this.remoteInterfaceName = remoteInterfaceName;
-	}
-
-	/**
-	 * @return the objectKey
-	 */
-	public long getObjectKey() {
-		return objectKey;
-	}
-
-	/**
-	 * @param objectKey the objectKey to set
-	 */
-	public void setObjectKey(long objectKey) {
-		this.objectKey = objectKey;
-	}
-
 	public String getMethodName() {
 		return methodName;
 	}
 
 	public void setMethodName(String methodName) {
 		this.methodName = methodName;
+	}
+
+	/**
+	 * @return the rOR
+	 */
+	public RemoteObjectReference getROR() {
+		return ROR;
+	}
+
+	/**
+	 * @param rOR the rOR to set
+	 */
+	public void setROR(RemoteObjectReference rOR) {
+		ROR = rOR;
 	}
 
 	public Object[] getArgs() {
