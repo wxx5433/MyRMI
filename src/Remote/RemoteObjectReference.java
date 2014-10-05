@@ -1,22 +1,26 @@
 package Remote;
 
+import java.io.Serializable;
 import Stub.Stub;
+import Util.Util;
 
 /**
  * @author Xiaoxiang Wu(xiaoxiaw)
  * @author Ye Zhou(zhouye)
  */
-public class RemoteObjectReference {
+public class RemoteObjectReference implements Serializable {
+	private static final long serialVersionUID = 3944776457281619555L;
+
 	private String hostIP;
 	private int port;
 	private long objectKey;
 	private String remoteInterfaceName;
 	
 	public RemoteObjectReference(String ip, int port, String riname) {
-		this.hostIP = ip;
-		this.port = port;
-		this.remoteInterfaceName = riname;
-		this.objectKey = 0L;
+		setHostIP(ip);
+		setPort(port);
+		setRemoteInterfaceName(riname);
+		setObjectKey(0L);
 	}
 	
 	/**
@@ -34,7 +38,7 @@ public class RemoteObjectReference {
 		try {
 			Class<?> stubClass = Class.forName(stubClassName);
 			Stub stub = (Stub) stubClass.newInstance();
-			proxy = Util.Util.createProxy(stub);
+			proxy = Util.createProxy(stub);
 			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
