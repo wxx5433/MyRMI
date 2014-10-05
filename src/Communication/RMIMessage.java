@@ -13,20 +13,29 @@ public class RMIMessage implements Serializable {
 	 * The method name to invoke. 
 	 * Look up the table to find the object
 	 */
+	private RemoteObjectReference ROR;
 	private String methodName;
 	private Object[] args;
 	private Object returnValue;
 	private Exception exception;
 	
 	
-	public RMIMessage(String methodName, Object[] args) {
+	public RMIMessage(String methodName, RemoteObjectReference ror, Object[] args) {
 		this.methodName = methodName;
 		this.args = args;
+		setROR(ror);
 		returnValue = null;
 		exception = null;
 	}
 	
-	public void invoke(Object object) throws Exception {
+	/**
+	 * This method should be invoked by the server.
+	 * Then the server will call the specific method locally,
+	 * and marshaled the return value into RMIMessage.
+	 * @param object 
+	 * @throws Exception
+	 */
+	public void call(Object object) throws Exception {
 		if (object == null || methodName == null) {
 			throw new Exception("bad invoke");
 		}
@@ -43,9 +52,11 @@ public class RMIMessage implements Serializable {
 				} else {
 					argsTypes[i] = args[i].getClass();
 				}
+System.out.println("argsType: " + argsTypes[i]);
 			}
 		}
 		
+		// invoke the method at server
 		Method method = object.getClass().getMethod(methodName, argsTypes);
 		returnValue = method.invoke(object, argsTypes);
 	}
@@ -82,6 +93,14 @@ public class RMIMessage implements Serializable {
 
 	public void setException(Exception exception) {
 		this.exception = exception;
+	}
+
+	public RemoteObjectReference getROR() {
+		return ROR;
+	}
+
+	public void setROR(RemoteObjectReference ror) {
+		ROR = ror;
 	}
 
 }
