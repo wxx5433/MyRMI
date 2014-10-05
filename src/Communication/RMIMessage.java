@@ -63,7 +63,7 @@ System.out.println("argsType: " + argsTypes[i]);
 		
 		// invoke the method at server
 		Method method = object.getClass().getMethod(methodName, argsTypes);
-		returnValue = method.invoke(object, argsTypes);
+		returnValue = method.invoke(object, args);
 	}
 	
 	
