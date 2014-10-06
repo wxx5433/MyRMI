@@ -7,7 +7,9 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import Utils.NodeID;
 import Communication.CommunicationMessage;
+import Communication.CommunicationMessage.MessageType;
 
 /**
  * Listen thread in <code>Registery</code>, it is launched when
@@ -38,24 +40,29 @@ public class SocketListenThread implements Runnable {
 			while (!stop) {
 				try {
 					Socket socket = listener.accept();
-					InputStream input = socket.getInputStream();
-					ObjectInputStream inputStream = new ObjectInputStream(input);
-					// receive message
+					ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+					ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 					CommunicationMessage communicationMessage = 
-							(CommunicationMessage) inputStream.readObject();
-					
-					
-					
-//					String slaveName = (String) inputStream.readObject();
-					ObjectOutputStream out = new ObjectOutputStream(
-							socket.getOutputStream());
-					System.out.println(slaveName + ":online!");
-					registry.newSlaveOnline(slaveName, socket, out,
-							inputStream);
+							(CommunicationMessage) in.readObject();
+					MessageType messageType = communicationMessage.getMessageType();
+					// new server online
+					if (messageType == MessageType.NewDispatchOnline) {
+						// message format: NodeID.toString()
+						NodeID nodeID = NodeID.fromString(communicationMessage.getMessage());
+						registry.newServerOnline(nodeID, socket, in, out);
+						
+						// start a new thread to handle afterward communication between registry and server
+						new Thread(new SocketHandler(registry, socket, in, out)).start();
+					} else if (messageType == MessageType.LookUpService){    // look up service
+						registry.lookup();
+					}
 				} catch (IOException e) {
 					System.out.println("Error occur when listening:");
 					e.printStackTrace();
 				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -64,8 +71,9 @@ public class SocketListenThread implements Runnable {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public void terminate() {
 		stop = true;
 	}
+	
 }
