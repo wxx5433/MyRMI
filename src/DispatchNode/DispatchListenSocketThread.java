@@ -1,12 +1,13 @@
 package DispatchNode;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
 
-import MigratableProcess.MigratableProcess;
-import Utils.NodeID;
+import Communication.RMIMessage;
 
 /**
  * This class is used to initialize a socket thread for slave nodes to have a
@@ -17,82 +18,42 @@ import Utils.NodeID;
  *
  */
 public class DispatchListenSocketThread implements Runnable {
-	private NodeID masterNodeID;
+	private DispatchNode dispatchNode;
+	private int portNum;
 	private boolean stop;
-	private DispatchNode slaveNode;
-	private ObjectOutputStream outputStream;
-	private ObjectInputStream inputStream;
 
-	public DispatchServiceSocketThread(DispatchNode slaveNode, NodeID masterNodeID) {
-		this.slaveNode = slaveNode;
-		this.masterNodeID = masterNodeID;
+	public DispatchListenSocketThread(DispatchNode dispatchNode, int portNum) {
+		this.dispatchNode = dispatchNode;
+		this.portNum = portNum;
 		stop = false;
 	}
 
 	@Override
 	public void run() {
-		Socket socket;
+		ServerSocket listener;
 		try {
-			/* connect the newly started slave node to master node */
-			socket = new Socket(masterNodeID.getHostName(),
-					masterNodeID.getPort());
-			outputStream = new ObjectOutputStream(socket.getOutputStream());
-			/* tell master node that the new slave node is online! */
-			SendOnlineInfo(socket);
-
-			/* Start receiving master's command */
-			inputStream = new ObjectInputStream(socket.getInputStream());
+			listener = new ServerSocket(portNum);
 			while (!stop) {
-				/* receive commands from masterNode */
-				Object recievedData = inputStream.readObject();
-				if (recievedData instanceof String) {
-					String command = (String) recievedData;
-					/* get feedback of the command executed on slave node */
-					Object feedback = slaveNode.executeCommand(command);
-					/* send feedback to master node */
-					outputStream.writeObject(feedback);
-					outputStream.reset();
-				} else if (recievedData instanceof MigratableProcess) {
-					/*
-					 * This slave node is asked to execute a process migrated
-					 * from other slave node
-					 */
-					MigratableProcess migratableProcess = (MigratableProcess) recievedData;
-					Object feedback = slaveNode
-							.launchMigratedProcess(migratableProcess);
-					/* send feedback to master node */
-					outputStream.writeObject(feedback);
-					outputStream.reset();
+				try {
+					Socket socket = listener.accept();
+					InputStream input = socket.getInputStream();
+					ObjectInputStream inputStream = new ObjectInputStream(input);
+					RMIMessage invokeRequest = (RMIMessage) inputStream
+							.readObject();
+					ObjectOutputStream outputStream = new ObjectOutputStream(
+							socket.getOutputStream());
+					System.out.println("InvokeRequest");
+					dispatchNode.newInvokeRequest(invokeRequest, outputStream);
+				} catch (IOException e) {
+					System.out.println("Error occur when listening:");
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
 				}
 			}
-			socket.close();
 		} catch (IOException e) {
-			System.out.println(slaveNode.getDispatchName()
-					+ ":Exception founded when trying to connect to manager: "
-					+ e);
+			System.out.println("Error accur when creating server:");
 			e.printStackTrace();
-			System.exit(0);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Tell the master node that a new slave node has logged in.
-	 * 
-	 * @param sock
-	 * @throws IOException
-	 */
-	private void SendOnlineInfo(Socket sock) throws IOException {
-		try {
-			outputStream.writeObject(slaveNode.getDispatchName());
-			outputStream.reset();
-			System.out.println(slaveNode.getDispatchName() + ":Registerred");
-		} catch (java.net.ConnectException e) {
-			sock.close();
-			System.out.println(slaveNode.getDispatchName()
-					+ ":Unable to register to the manager!");
-			System.exit(0);
 		}
 	}
 

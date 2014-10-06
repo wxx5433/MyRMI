@@ -49,7 +49,7 @@ public class DispatchServiceSocketThread implements Runnable {
 			inputStream = new ObjectInputStream(socket.getInputStream());
 			Object recievedData = inputStream.readObject();
 			message = (CommunicationMessage) recievedData;
-			System.out.println(message.getMessage());
+			dispatchNode.recieveFeedBack(message);
 			while (!stop) {
 				/* receive commands from terminal and send it to registration */
 				this.wait(2000);
@@ -61,7 +61,9 @@ public class DispatchServiceSocketThread implements Runnable {
 				outputStream.reset();
 				recievedData = inputStream.readObject();
 				message = (CommunicationMessage) recievedData;
+				dispatchNode.recieveFeedBack(message);
 				System.out.println(message.getMessage());
+				newMessage = false;
 			}
 			socket.close();
 		} catch (IOException e) {

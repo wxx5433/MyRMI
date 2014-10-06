@@ -3,6 +3,8 @@ package DispatchNode;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import Utils.InvokeTask;
+
 /**
  * {@link ExecutionExecutor} is thread pool management thread to control how
  * many {@link ExecutionThread} threads can run at the same time. Exeuctor will
@@ -27,19 +29,26 @@ class ExecutionExecutor implements Runnable {
 	@Override
 	public void run() {
 		while (!isStop) {
-			execute();
-
+			try {
+				InvokeTask invokeTask = dispatchNode.invokeRequestQueue.take();
+				execute(invokeTask);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			if (isStop)
 				break;
 		}
 	}
 
-	public void execute() {
-		Thread thread = new Thread();
+	public void execute(InvokeTask invokeTask) {
+		DispatchExecutionThread dispatchExecutionThread = new DispatchExecutionThread(
+				invokeTask);
+		Thread thread = new Thread(dispatchExecutionThread);
 		pool.execute(thread);
 	}
 
-	public void stopThread() {
+	public void terminate() {
 		pool.shutdown();
 		isStop = true;
 	}
