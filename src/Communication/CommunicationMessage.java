@@ -12,7 +12,8 @@ public class CommunicationMessage implements Serializable {
 		DelService(2), // One Service is down on one dispatch server
 		ReplyToDis(3), // Reply to dispatch server
 		LookUpService(4), // Look up service request from client
-		HeartBeat(5); // Look up service request from client
+		HeartBeat(5), // Look up service request from client
+		ReplyServiceID(6); // Reply ServiceID to dispatch server
 
 		private int messageType;
 
