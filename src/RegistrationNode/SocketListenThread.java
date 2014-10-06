@@ -54,7 +54,7 @@ public class SocketListenThread implements Runnable {
 						// start a new thread to handle afterward communication between registry and server
 						new Thread(new SocketHandler(registry, socket, in, out)).start();
 					} else if (messageType == MessageType.LookUpService){    // look up service
-						registry.lookup();
+						registry.lookup(communicationMessage.getMessage());
 					}
 				} catch (IOException e) {
 					System.out.println("Error occur when listening:");

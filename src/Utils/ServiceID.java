@@ -10,14 +10,14 @@ package Utils;
 public class ServiceID {
 	private String serviceName;
 	private long key;
-	private final String nodeID;
+	private final String serviceID;
 	private final int hash;
 
 	public ServiceID(String serviceName, long key) {
 		this.serviceName = serviceName;
 		this.key = key;
-		nodeID = serviceName + ":" + key;
-		hash = nodeID.hashCode();
+		serviceID = serviceName + ":" + key;
+		hash = serviceID.hashCode();
 	}
 
 	public String getSericeName() {
@@ -35,14 +35,14 @@ public class ServiceID {
 
 	@Override
 	public String toString() {
-		return nodeID;
+		return serviceID;
 	}
 
 	public static ServiceID fromString(String nodeIdStr) {
 		int divideIndex = nodeIdStr.indexOf(":");
-		String host = nodeIdStr.substring(0, divideIndex);
-		long port = Long.parseLong(nodeIdStr.substring(divideIndex + 1));
-		return new ServiceID(host, port);
+		String serviceName = nodeIdStr.substring(0, divideIndex);
+		long key = Long.parseLong(nodeIdStr.substring(divideIndex + 1));
+		return new ServiceID(serviceName, key);
 	}
 
 	@Override
