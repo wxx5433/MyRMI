@@ -4,63 +4,65 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import DispatchNode.DisTerminalThread;
-import MigratableProcess.MigratableProcess;
-import ProcessManager.ProcessManager;
-import SlaveNode.NodeID;
+import Utils.NodeID;
+import Utils.ServiceID;
 
 /**
- * <code>MasterNode</code> controls all the socket connections with
- * <code>SlaveNode</code> and their related output/input stream Also it needs to
- * analyze the command, get the destination slave, send different commands to
- * slaves, then recieve the respond message from <code>SlaveNode</code>
  * 
  * @author Xiaoxiang Wu(xiaoxiaw)
  * @author Ye Zhou(yezhou)
  *
  */
 public class RegistrationNode {
-	private ConcurrentHashMap<NodeID, Socket> slavesManagement = new ConcurrentHashMap<NodeID, Socket>();
-	private ConcurrentHashMap<NodeID, ObjectOutputStream> slavesOutputMap = new ConcurrentHashMap<NodeID, ObjectOutputStream>();
-	private ConcurrentHashMap<NodeID, ObjectInputStream> slavesInputMap = new ConcurrentHashMap<NodeID, ObjectInputStream>();
-	private static final int DEFAULT_PORT_NUM = 10000;
+	/**
+	 * store unique serviceId, which refers to a remote object service on the 
+	 * server specified by NodeID.
+	 */
+	private Map<ServiceID, NodeID> remoteObjectTable = null;
+	/**
+	 * Indicates if a node is healthy.
+	 * Key is the server's ID, value is the last time registry receive heartBeart from the server.
+	 */
+	private Map<NodeID, Long> healthTable = null;
+	/**
+	 * Map use to maintain socket connection with server
+	 */
+	private Map<NodeID, Socket> socketTable = null;
+	private Map<Socket, ObjectInputStream> inputStreamTable = null;
+	private Map<Socket, ObjectOutputStream> outputStreamTable = null;
+	
 	private int portNum;
-	private SocketListenThread socketListener;
-	private DisTerminalThread terminalThread;
-	private Thread listen;
-	private Thread terminal;
-	private ProcessManager processManager;
+	private static final int DEFAULT_PORT_NUM = 11111;
+	SocketListenThread socketListener;
+	Thread listen = null;
 
 	public RegistrationNode() {
-		portNum = DEFAULT_PORT_NUM;
+		this(DEFAULT_PORT_NUM);
 	}
 
-	/**
-	 * Initialize MasterNode on a specific node
-	 * 
-	 * @param portNum
-	 */
 	public RegistrationNode(int portNum) {
 		this.portNum = portNum;
+		socketListener = null;
+		listen = null;
+		remoteObjectTable = new ConcurrentHashMap<ServiceID, NodeID>();
+		healthTable = new ConcurrentHashMap<NodeID, Long>();
+		socketTable = new ConcurrentHashMap<NodeID, Socket>();
+		inputStreamTable = new ConcurrentHashMap<Socket, ObjectInputStream>();
+		outputStreamTable = new ConcurrentHashMap<Socket, ObjectOutputStream>();
 	}
 
 	/**
-	 * Start the listen thread and terminal thread, and also create the
-	 * processManager
+	 * Start the listen thread 
 	 */
 	private void start() {
 		/* start a listen thread to accept socket connection */
 		socketListener = new SocketListenThread(this, this.portNum);
 		listen = new Thread(socketListener);
 		listen.start();
-		/* start a terminal thread to accept users' input */
-		terminalThread = new DisTerminalThread(this);
-		terminal = new Thread(terminalThread);
-		terminal.start();
-		/* start a process manager to monitor all processes run on slave nodes */
-		processManager = new ProcessManager();
 	}
 
 	/**
@@ -71,7 +73,7 @@ public class RegistrationNode {
 	 * @param out
 	 * @param input
 	 */
-	public void newSlaveOnline(String slaveName, Socket socket,
+	public void newDispatchOnline(String slaveName, Socket socket,
 			ObjectOutputStream out, ObjectInputStream input) {
 		NodeID slaveNodeID = NodeID.fromString(slaveName);
 		slavesManagement.put(slaveNodeID, socket);
