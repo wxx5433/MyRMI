@@ -1,6 +1,8 @@
 package Stub;
 
+import Remote.RemoteObjectReference;
+
 public interface Stub {
-	public void setRemoteInterfaceName(String remoteInterfaceName);
-	public String getRemoteInterfaceName();
+	public void setRemoteObjectReference(RemoteObjectReference ror);
+	public RemoteObjectReference getRemoteObjectReference();
 }
