@@ -199,7 +199,7 @@ public class DispatchNode {
 		if (message.getMessageType() == MessageType.ReplyServiceID) {
 			ServiceID serviceID = ServiceID.fromString(message.getMessage());
 			updateServiceManage(serviceID);
-		} else if (message.getMessageType() == MessageType.ReplyToDis) {
+		} else if (message.getMessageType() == MessageType.ReplyToServer) {
 			System.out.println(message.getMessage());
 		}
 	}

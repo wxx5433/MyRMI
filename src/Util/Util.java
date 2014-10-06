@@ -48,7 +48,7 @@ public abstract class Util {
 	/**
 	 * receive the result of a remote call from the server.
 	 * @param socket socket connection with the server
-	 * @return return value from the remote functino call.
+	 * @return return value from the remote function call.
 	 */
 	public static RMIMessage getRemoteCallResponse(Socket socket) {
 		RMIMessage response = null;

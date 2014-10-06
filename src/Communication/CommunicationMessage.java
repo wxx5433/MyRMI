@@ -7,13 +7,10 @@ public class CommunicationMessage implements Serializable {
 	private static final long serialVersionUID = 3871209197799810883L;
 
 	public enum MessageType {
-		NewDispatchOnline(0), // New Dispatch Server is online
 		NewService(1), // New Service is started on one dispatch server
-		DelService(2), // One Service is down on one dispatch server
-		ReplyToDis(3), // Reply to dispatch server
-		LookUpService(4), // Look up service request from client
-		HeartBeat(5), // Look up service request from client
-		ReplyServiceID(6); // Reply ServiceID to dispatch server
+		ReplyToServer(2), // Reply to dispatch server
+		LookUpService(3), // Look up service request from client
+		ReplyROR(4); // Reply remoteObjectReference to the client
 
 		private int messageType;
 

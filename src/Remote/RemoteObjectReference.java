@@ -20,7 +20,7 @@ public class RemoteObjectReference implements Serializable {
 		setHostIP(ip);
 		setPort(port);
 		setRemoteInterfaceName(riname);
-		setObjectKey(0L);
+		setObjectKey(-1);
 	}
 	
 	/**
