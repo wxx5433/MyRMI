@@ -72,11 +72,15 @@ public class SocketListenThread implements Runnable {
 		}
 		MessageType messageType = message.getMessageType();
 		String messageContents = message.getMessage();
+System.out.println(messageContents);
 		CommunicationMessage replyMessage = null;
 		// rebind a new service
 		if (messageType == MessageType.NewService) {
 			// message format: serviceName|IP|port
-			String[] fields = messageContents.split("|");
+			String[] fields = messageContents.split(" ");
+for (int i = 0; i < fields.length; ++i) {
+	System.out.println(fields[i]);
+}
 			if (fields.length != 3) {
 				replyMessage = new CommunicationMessage(
 						MessageType.ReplyToServer, "Bad format when add service!");

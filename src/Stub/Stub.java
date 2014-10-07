@@ -2,7 +2,13 @@ package Stub;
 
 import Remote.RemoteObjectReference;
 
-public interface Stub {
-	public void setRemoteObjectReference(RemoteObjectReference ror);
-	public RemoteObjectReference getRemoteObjectReference();
+public abstract class Stub {
+	RemoteObjectReference ror;
+	
+	public void setRemoteObjectReference(RemoteObjectReference ror) {
+		this.ror = ror;
+	}
+	public RemoteObjectReference getRemoteObjectReference() {
+		return ror;
+	}
 }

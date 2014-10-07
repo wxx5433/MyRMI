@@ -31,7 +31,10 @@ public class RemoteObjectInvocationHandler implements InvocationHandler {
 		// receive response.
 		RMIMessage responseMessage = Util.getRemoteCallResponse(socket);
 		
-		return responseMessage;
+		Object returnValue = responseMessage.getReturnValue();
+		socket.close();
+		
+		return returnValue;
 	}
 	
 	

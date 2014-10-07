@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
 
 import Communication.CommunicationMessage;
 import Communication.CommunicationMessage.MessageType;
-import Exception.RemoteException;
+import Exception.MyRemoteException;
 import Remote.RemoteObjectReference;
 
 /**
@@ -33,7 +33,7 @@ public class RegistryCommunicator {
 		this.port = port;
 	}
 	
-	public RemoteObjectReference lookup(String serviceName) throws RemoteException {
+	public RemoteObjectReference lookup(String serviceName) throws MyRemoteException {
 		RemoteObjectReference ror = null;
 		try {
 			// connect the registry server
@@ -46,7 +46,7 @@ public class RegistryCommunicator {
 			// read result
 			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 			ror = (RemoteObjectReference) in.readObject();
-			socket.close();
+ 			socket.close();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -66,7 +66,7 @@ public class RegistryCommunicator {
 			Socket socket = new Socket(hostName, port);
 			// send the rebind request to the registry server
 			CommunicationMessage message = new CommunicationMessage(
-					MessageType.NewService, serviceName + "|" + serverIp + "|" + serverPort);
+					MessageType.NewService, serviceName + " " + serverIp + " " + serverPort);
 			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 			out.writeObject(message);
 			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());

@@ -13,8 +13,8 @@ package TestService;
 
 import java.io.*;
 
-import Exception.RemoteException;
-import MyRMIRegistry.LocateRegistry;
+import Exception.MyRemoteException;
+import MyRMIRegistry.MyLocateRegistry;
 import MyRMIRegistry.RegistryCommunicator;
 import Remote.RemoteObjectReference;
 
@@ -35,11 +35,11 @@ public class ZipCodeClient {
 
 	// locate the registry and get ror.
 	RegistryCommunicator rc = 
-	    LocateRegistry.getRegistry(host, port);
+	    MyLocateRegistry.getRegistry(host, port);
 	RemoteObjectReference ror = null;
 	try {
 		ror = rc.lookup(serviceName);
-	} catch (RemoteException e) {
+	} catch (MyRemoteException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}

@@ -1,6 +1,7 @@
 package DispatchNode;
 
 import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -22,10 +23,9 @@ import Utils.ServiceID;
  * @author Ye Zhou(yezhou)
  */
 public class DispatchNode {
-	private static final String DEFAULT_DISPATCH_ADDRESS = "localhost";
-	private static final int DEFAULT_DISPATCH_PORT = 8888;
+	private static final String DEFAULT_DISPATCH_ADDRESS = "128.237.163.210";
 	private static final int DEFAULT_SLOT_NUM = 10;
-	private static final int DEFAULT_LISTEN_PORT = 9999;
+	private static final int DEFAULT_LISTEN_PORT = 11112;
 
 	private NodeID dispatchNodeID;
 	private int listenPort;
@@ -38,8 +38,7 @@ public class DispatchNode {
 	private DispatchListenSocketThread dispatchListenSocket = null;
 
 	public DispatchNode() {
-		dispatchNodeID = new NodeID(DEFAULT_DISPATCH_ADDRESS,
-				DEFAULT_DISPATCH_PORT);
+		dispatchNodeID = new NodeID(DEFAULT_DISPATCH_ADDRESS,DEFAULT_LISTEN_PORT);
 		this.listenPort = DEFAULT_LISTEN_PORT;
 	}
 
@@ -77,11 +76,11 @@ public class DispatchNode {
 	 */
 
 	private void startNewService(RMIMessage invokeRequest,
-			ObjectOutputStream outputStream) {
+			Socket socket) {
 		String serviceName = invokeRequest.getROR().getRemoteInterfaceName();
 		Class<?> serviceClass = null;
 		try {
-			serviceClass = Class.forName("RemoteService." + serviceName);
+			serviceClass = Class.forName("TestService." + serviceName + "Impl");
 		} catch (ClassNotFoundException e1) {
 			e1.printStackTrace();
 		}
@@ -94,7 +93,7 @@ public class DispatchNode {
 		long key = invokeRequest.getROR().getObjectKey();
 		ServiceID serviceID = new ServiceID(serviceName, key);
 		addNewServiceToManagement(serviceID, serviceObject);
-		newInvokeRequest(invokeRequest, outputStream);
+		newInvokeRequest(invokeRequest, socket);
 	}
 
 	private void addNewServiceToManagement(ServiceID serviceID,
@@ -102,8 +101,7 @@ public class DispatchNode {
 		serviceManager.put(serviceID, serviceObject);
 	}
 
-	public void newInvokeRequest(RMIMessage invokeRequest,
-			ObjectOutputStream outputStream) {
+	public void newInvokeRequest(RMIMessage invokeRequest, Socket socket) {
 		String serviceName = invokeRequest.getROR().getRemoteInterfaceName();
 		long key = invokeRequest.getROR().getObjectKey();
 		ServiceID serviceID = new ServiceID(serviceName, key);
@@ -112,10 +110,10 @@ public class DispatchNode {
 					serviceName, key));
 			if (serviceObject != null) {
 				invokeRequestQueue.add(new InvokeTask(invokeRequest,
-						outputStream, serviceObject));
+						socket, serviceObject));
 			}
 		} else {
-			startNewService(invokeRequest, outputStream);
+			startNewService(invokeRequest, socket);
 		}
 	}
 

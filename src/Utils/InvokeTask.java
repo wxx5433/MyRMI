@@ -1,19 +1,19 @@
 package Utils;
 
-import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 import Communication.RMIMessage;
 import Remote.Remote640;
 
 public class InvokeTask {
 	private RMIMessage message;
-	private ObjectOutputStream outputStream;
+	private Socket socket;
 	private Remote640 serviceObject;
 
-	public InvokeTask(RMIMessage message, ObjectOutputStream outputStream,
+	public InvokeTask(RMIMessage message, Socket socket,
 			Remote640 serviceObject) {
 		this.message = message;
-		this.outputStream = outputStream;
+		this.socket = socket;
 		this.serviceObject = serviceObject;
 	}
 
@@ -25,20 +25,20 @@ public class InvokeTask {
 		this.message = message;
 	}
 
-	public ObjectOutputStream getOutputStream() {
-		return outputStream;
-	}
-
-	public void setOutputStream(ObjectOutputStream outputStream) {
-		this.outputStream = outputStream;
-	}
-
 	public Remote640 getServiceObject() {
 		return serviceObject;
 	}
 
 	public void setServiceObject(Remote640 serviceObject) {
 		this.serviceObject = serviceObject;
+	}
+
+	public Socket getSocket() {
+		return socket;
+	}
+
+	public void setSocket(Socket socket) {
+		this.socket = socket;
 	}
 
 }

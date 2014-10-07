@@ -103,7 +103,10 @@ System.out.println("Add service successfully!");
 			Map<NodeID, Integer> serverList = remoteObjectTable.get(serviceName);
 			// randomly choose one to get better load balancing
 			Random random = new Random();
-			List<NodeID> nodeList = new ArrayList<NodeID>(serverList.size());
+			List<NodeID> nodeList = new ArrayList<NodeID>(serverList.keySet());
+			if (nodeList.size() == 0) {
+				return null;
+			}
 			NodeID nodeID = nodeList.get(random.nextInt(serverList.size()));
 			// increase the objectKey 
 			int objectKey = serverList.get(nodeID) + 1;

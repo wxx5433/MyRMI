@@ -1,8 +1,8 @@
 package TestService;
 
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 
+import Exception.MyRemoteException;
+import MyRMIRegistry.MyLocateRegistry;
 import MyRMIRegistry.RegistryCommunicator;
 
 
@@ -67,12 +67,7 @@ public class ZipCodeServerImpl implements ZipCodeServer {
     
     public static void main(String[] args) {
     	RegistryCommunicator rc = null;
-		try {
-			rc = (RegistryCommunicator) LocateRegistry.getRegistry();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	rc.rebind(args[0], args[1], Integer.parseInt(args[2]));
+		rc =  MyLocateRegistry.getRegistry();
+    	rc.rebind(args[0], args[1], 11112);
     }
 }

@@ -1,6 +1,6 @@
 package MyRMIRegistry;
 
-public abstract class LocateRegistry {
+public abstract class MyLocateRegistry {
 	private static final int DEFAULT_PORT_NUM = 11111;
 	private static final String HOST_NAME = "128.237.163.210";
 	

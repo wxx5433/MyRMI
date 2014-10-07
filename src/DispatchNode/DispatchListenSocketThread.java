@@ -3,7 +3,6 @@ package DispatchNode;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -40,10 +39,10 @@ public class DispatchListenSocketThread implements Runnable {
 					ObjectInputStream inputStream = new ObjectInputStream(input);
 					RMIMessage invokeRequest = (RMIMessage) inputStream
 							.readObject();
-					ObjectOutputStream outputStream = new ObjectOutputStream(
-							socket.getOutputStream());
+//					ObjectOutputStream outputStream = new ObjectOutputStream(
+//							socket.getOutputStream());
 					System.out.println("InvokeRequest");
-					dispatchNode.newInvokeRequest(invokeRequest, outputStream);
+					dispatchNode.newInvokeRequest(invokeRequest, socket);
 				} catch (IOException e) {
 					System.out.println("Error occur when listening:");
 					e.printStackTrace();

@@ -35,7 +35,7 @@ public abstract class Util {
 		try {
 			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 			out.writeObject(message);
-			out.close();
+//			out.close();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -55,7 +55,7 @@ public abstract class Util {
 		try {
 			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 			response = (RMIMessage) in.readObject();
-			in.close();
+//			in.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

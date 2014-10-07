@@ -1,5 +1,8 @@
 package DispatchNode;
 
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+
 import Remote.Remote640;
 import Utils.InvokeTask;
 
@@ -24,7 +27,10 @@ public class DispatchExecutionThread implements Runnable {
 		Remote640 serviceObject = invokeTask.getServiceObject();
 		try {
 			invokeTask.getMessage().call(serviceObject);
-			invokeTask.getOutputStream().writeObject(invokeTask.getMessage());
+			OutputStream outputStream = invokeTask.getSocket().getOutputStream();
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+			objectOutputStream.writeObject(invokeTask.getMessage());
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

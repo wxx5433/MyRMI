@@ -32,12 +32,13 @@ public class RemoteObjectReference implements Serializable {
 	 * @return a proxy
 	 */
 	public Remote640 localize() {
-		String stubClassName = remoteInterfaceName + "_stub";
+		String stubClassName = "TestService." + remoteInterfaceName + "_stub";
 		Remote640 proxy = null;
 		
 		try {
 			Class<?> stubClass = Class.forName(stubClassName);
 			Stub stub = (Stub) stubClass.newInstance();
+			stub.setRemoteObjectReference(this);
 			proxy = Util.createProxy(stub);
 			
 		} catch (ClassNotFoundException e) {

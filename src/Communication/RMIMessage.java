@@ -40,9 +40,9 @@ public class RMIMessage implements Serializable {
 		}
 		
 		Class<?>[] argsTypes = null;
-		int argsNum = args.length;
 		// have arguments, then parse the types
-		if (argsNum > 0) {
+		if (args != null) {
+			int argsNum = args.length;
 			argsTypes = new Class<?>[argsNum];
 			for (int i = 0; i < argsNum; ++i) {
 				if (args[i] instanceof Remote640) {
