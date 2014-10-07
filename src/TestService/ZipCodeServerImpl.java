@@ -1,5 +1,10 @@
 package TestService;
 
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+
+import MyRMIRegistry.RegistryCommunicator;
+
 
 // in implementation, you do not have to extend this as in Java RMI. 
 // in your design, however, you can do so.
@@ -58,5 +63,16 @@ public class ZipCodeServerImpl implements ZipCodeServer {
 	    	+ "code: "+temp.ZipCode+"\n");        
     		temp = temp.next;                        
 	    }
+    }
+    
+    public static void main(String[] args) {
+    	RegistryCommunicator rc = null;
+		try {
+			rc = (RegistryCommunicator) LocateRegistry.getRegistry();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	rc.rebind(args[0], args[1], Integer.parseInt(args[2]));
     }
 }

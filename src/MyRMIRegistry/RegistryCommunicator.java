@@ -25,6 +25,7 @@ public class RegistryCommunicator {
 	 */
 	private String hostName;   
 	private int port;
+	
 
 	
 	public RegistryCommunicator (String hostName, int port) {

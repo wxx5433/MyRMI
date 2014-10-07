@@ -13,6 +13,9 @@ package TestService;
 
 import java.io.*;
 
+import Exception.RemoteException;
+import MyRMIRegistry.LocateRegistry;
+import MyRMIRegistry.RegistryCommunicator;
 import Remote.RemoteObjectReference;
 
 public class ZipCodeClient { 
@@ -31,9 +34,15 @@ public class ZipCodeClient {
 	BufferedReader in = new BufferedReader(new FileReader(args[3]));
 
 	// locate the registry and get ror.
-	SimpleRegistry sr = 
-	    LocateSimpleRegistry.getRegistry(host, port);
-	RemoteObjectReference ror = sr.lookup(serviceName);
+	RegistryCommunicator rc = 
+	    LocateRegistry.getRegistry(host, port);
+	RemoteObjectReference ror = null;
+	try {
+		ror = rc.lookup(serviceName);
+	} catch (RemoteException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 
 	// get the proxy
 	ZipCodeServer zcs = (ZipCodeServer) ror.localize();

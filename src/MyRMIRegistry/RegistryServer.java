@@ -25,16 +25,19 @@ public class RegistryServer {
 	 */
 	private Map<String, Map<NodeID, Integer>> remoteObjectTable = null;
 	
+	private String hostName;
 	private int portNum;    // the port to listening for incoming requests
 	private static final int DEFAULT_PORT_NUM = 11111;
+	private static final String HOST_NAME = "128.237.163.210";
 	SocketListenThread socketListener;
 	Thread listen = null;
 
 	public RegistryServer() {
-		this(DEFAULT_PORT_NUM);
+		this(HOST_NAME, DEFAULT_PORT_NUM);
 	}
 
-	public RegistryServer(int portNum) {
+	public RegistryServer(String hostName, int portNum) {
+		this.hostName = hostName;
 		this.portNum = portNum;
 		socketListener = null;
 		listen = null;
