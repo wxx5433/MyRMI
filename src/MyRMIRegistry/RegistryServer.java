@@ -1,9 +1,5 @@
 package MyRMIRegistry;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,11 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import Communication.CommunicationMessage;
 import Communication.CommunicationMessage.MessageType;
-import DispatchNode.DisTerminalThread;
 import Remote.RemoteObjectReference;
-import Stub.Stub;
 import Utils.NodeID;
-import Utils.ServiceID;
 
 /**
  * 

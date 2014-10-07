@@ -23,11 +23,11 @@ import Communication.CommunicationMessage.MessageType;
  *
  */
 public class SocketListenThread implements Runnable {
-	private Registry registry;
+	private RegistryServer registry;
 	private int portNum;
 	private transient boolean stop;
 
-	public SocketListenThread(Registry registryNode, int portNum) {
+	public SocketListenThread(RegistryServer registryNode, int portNum) {
 		this.registry = registryNode;
 		this.portNum = portNum;
 		stop = false;
