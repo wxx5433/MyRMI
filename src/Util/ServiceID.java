@@ -1,4 +1,4 @@
-package Utils;
+package Util;
 
 /**
  * Just put the hostname/IP address and port number all in And override some

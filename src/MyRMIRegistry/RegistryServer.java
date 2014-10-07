@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import Communication.CommunicationMessage;
 import Communication.CommunicationMessage.MessageType;
 import Remote.RemoteObjectReference;
-import Utils.NodeID;
+import Util.NodeID;
 
 /**
  * 

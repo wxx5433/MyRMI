@@ -10,9 +10,9 @@ import Communication.CommunicationMessage;
 import Communication.CommunicationMessage.MessageType;
 import Communication.RMIMessage;
 import Remote.Remote640;
-import Utils.InvokeTask;
-import Utils.NodeID;
-import Utils.ServiceID;
+import Util.InvokeTask;
+import Util.NodeID;
+import Util.ServiceID;
 
 /**
  * <code>SlaveNode</code> stores all the running thread information and their

@@ -4,7 +4,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
 import Remote.Remote640;
-import Utils.InvokeTask;
+import Util.InvokeTask;
 
 /**
  * This thread takes responsibility to take one invoke request from block queue
