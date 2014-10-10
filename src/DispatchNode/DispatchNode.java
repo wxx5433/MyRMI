@@ -107,7 +107,7 @@ public class DispatchNode {
 				.getReturnValue();
 		long newkey = getAvailableKeys(serviceName, returnObject);
 		if (newkey != -1) {
-			RemoteObjectReference ror = sendNewService(serviceName);
+			RemoteObjectReference ror = sendNewService(serviceName, newkey);
 			ror.setObjectKey(newkey);
 			return ror;
 		}
@@ -125,7 +125,7 @@ public class DispatchNode {
 		return -1;
 	}
 
-	private RemoteObjectReference sendNewService(String serviceName) {
+	private RemoteObjectReference sendNewService(String serviceName, long newkey) {
 		RegistryCommunicator rc = null;
 		try {
 			rc = MyLocateRegistry.getRegistry();
@@ -137,7 +137,7 @@ public class DispatchNode {
 			e.printStackTrace();
 		}
 		rc.rebind(serviceName, dispatchNodeID.getHostName(),
-				dispatchNodeID.getPort());
+				dispatchNodeID.getPort(), newkey);
 		RemoteObjectReference ror = new RemoteObjectReference(
 				dispatchNodeID.getHostName(), dispatchNodeID.getPort(),
 				serviceName);
