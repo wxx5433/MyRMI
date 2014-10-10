@@ -1,6 +1,5 @@
 package DispatchNode;
 
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,7 +37,8 @@ public class DispatchNode {
 	private DispatchListenSocketThread dispatchListenSocket = null;
 
 	public DispatchNode() {
-		dispatchNodeID = new NodeID(DEFAULT_DISPATCH_ADDRESS,DEFAULT_LISTEN_PORT);
+		dispatchNodeID = new NodeID(DEFAULT_DISPATCH_ADDRESS,
+				DEFAULT_LISTEN_PORT);
 		this.listenPort = DEFAULT_LISTEN_PORT;
 	}
 
@@ -75,8 +75,7 @@ public class DispatchNode {
 	 * @param command
 	 */
 
-	private void startNewService(RMIMessage invokeRequest,
-			Socket socket) {
+	private void startNewService(RMIMessage invokeRequest, Socket socket) {
 		String serviceName = invokeRequest.getROR().getRemoteInterfaceName();
 		Class<?> serviceClass = null;
 		try {
@@ -96,6 +95,17 @@ public class DispatchNode {
 		newInvokeRequest(invokeRequest, socket);
 	}
 
+	public void createRORFromRemote640(InvokeTask invokeTask) {
+
+	}
+
+	private void sendNewService() {
+
+	}
+
+	private void startNewServiceByClient(RMIMessage invokeRequest, Socket socket) {
+	}
+
 	private void addNewServiceToManagement(ServiceID serviceID,
 			Remote640 serviceObject) {
 		serviceManager.put(serviceID, serviceObject);
@@ -109,8 +119,8 @@ public class DispatchNode {
 			Remote640 serviceObject = serviceManager.get(new ServiceID(
 					serviceName, key));
 			if (serviceObject != null) {
-				invokeRequestQueue.add(new InvokeTask(invokeRequest,
-						socket, serviceObject));
+				invokeRequestQueue.add(new InvokeTask(invokeRequest, socket,
+						serviceObject));
 			}
 		} else {
 			startNewService(invokeRequest, socket);
