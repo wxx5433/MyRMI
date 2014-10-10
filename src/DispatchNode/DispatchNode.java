@@ -48,7 +48,7 @@ public class DispatchNode {
 	}
 
 	/**
-	 * Start the socket connection thread
+	 * Start the socket connection thread and the execution thread
 	 * 
 	 */
 	public void start() {
