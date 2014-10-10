@@ -13,6 +13,8 @@ import Util.NodeID;
 
 /**
  * 
+ * This class is the registry server, it stores the information of where the service is.
+ * It is used by the dispatch server to add new service and the client to lookup service.
  * @author Xiaoxiang Wu(xiaoxiaw)
  * @author Ye Zhou(yezhou)
  *
@@ -44,25 +46,13 @@ public class RegistryServer {
 		remoteObjectTable = new ConcurrentHashMap<String, Map<NodeID, Integer>>();
 	}
 
-	/**
-	 * Start the listen thread 
-	 */
-	private void start() {
-		/* start a listen thread to accept socket connection */
-		socketListener = new SocketListenThread(this, this.portNum);
-		listen = new Thread(socketListener);
-		listen.start();
-	}
-
-	public static void main(String[] args) throws Exception {
-		RegistryServer registry = new RegistryServer();
-		// start listening for incoming request
-		registry.start();
-	}
 
 	/**
 	 * add a new service to the registry
-	 * @throws Exception 
+	 * @param serviceName the service name to be added
+	 * @param ip dispatch server's ip
+	 * @param port dispatch server's listening port
+	 * @return message to the dispatch server to tell if the request is successful
 	 */
 	public CommunicationMessage addService(String serviceName, String ip, int port) {
 		// new serviceName
@@ -75,25 +65,32 @@ public class RegistryServer {
 			remoteObjectTable.put(serviceName, services);
 			replyMessage = new CommunicationMessage(
 					MessageType.ReplyToServer, "Add service Successfully!");
-System.out.println("Add service successfully!");
+//System.out.println("Add service successfully!");
 		} else {    // new service with same name
 			// check if this service has already on this server, if it is, then ignore this service.
 			services = remoteObjectTable.get(serviceName);
 			if (services.containsKey(nodeID)) {
 				replyMessage = new CommunicationMessage(
 						MessageType.ReplyToServer, "Add failed: Duplicate services on the same server");
-System.out.println("Add failed: duplicate service on the same server");
+//System.out.println("Add failed: duplicate service on the same server");
 			} else {
 				services = new ConcurrentHashMap<NodeID, Integer>();
 				services.put(nodeID, 0);    // Initialize the objectKey to 0
 				replyMessage = new CommunicationMessage(
 						MessageType.ReplyToServer, "Add service Successfully!");
-System.out.println("Add service successfully!");
+//System.out.println("Add service successfully!");
 			}
 		}
 		return replyMessage;
 	}
 	
+	/**
+	 * This method is called by client to look up a service.
+	 * If there are several service running on different dispatch node, 
+	 * we randomly choose one dispatch node and return the RemoteObjectReference.
+	 * @param serviceName the service name to look up
+	 * @return null - if the service does not exist. ROR - if the service is found
+	 */
 	public RemoteObjectReference lookup(String serviceName) {
 		RemoteObjectReference ror = null;
 		if (!remoteObjectTable.containsKey(serviceName)) {  // no such service
@@ -119,4 +116,19 @@ System.out.println("Add service successfully!");
 
 	}
 
+	/**
+	 * Start the listen thread 
+	 */
+	private void start() {
+		/* start a listen thread to accept socket connection */
+		socketListener = new SocketListenThread(this, this.portNum);
+		listen = new Thread(socketListener);
+		listen.start();
+	}
+
+	public static void main(String[] args) throws Exception {
+		RegistryServer registry = new RegistryServer();
+		// start listening for incoming request
+		registry.start();
+	}
 }

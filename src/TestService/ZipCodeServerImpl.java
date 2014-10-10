@@ -1,6 +1,9 @@
 package TestService;
 
 
+import java.io.IOException;
+import java.net.UnknownHostException;
+
 import Exception.MyRemoteException;
 import MyRMIRegistry.MyLocateRegistry;
 import MyRMIRegistry.RegistryCommunicator;
@@ -67,7 +70,15 @@ public class ZipCodeServerImpl implements ZipCodeServer {
     
     public static void main(String[] args) {
     	RegistryCommunicator rc = null;
-		rc =  MyLocateRegistry.getRegistry();
+		try {
+			rc =  MyLocateRegistry.getRegistry();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	rc.rebind(args[0], args[1], 11112);
     }
 }
