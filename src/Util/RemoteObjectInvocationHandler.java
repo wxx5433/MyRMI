@@ -58,4 +58,8 @@ public class RemoteObjectInvocationHandler implements InvocationHandler,
 
 		return returnValue;
 	}
+	
+	public Stub getStub() {
+		return stub;
+	}
 }
