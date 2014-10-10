@@ -6,6 +6,15 @@ import java.lang.reflect.Method;
 import Remote.Remote640;
 import Remote.RemoteObjectReference;
 
+/**
+ * The class is used between the client and the dispatch server.
+ * The proxy will marshal clients' remote method invocation into <code>RMIMessage</code>,
+ * and then send it to the dispatch server.
+ * The dispatch server then unmarshal the <code>RMIMessage</code> and call the method locally,
+ * and put the return value into <code>RMIMessage</code> and send it back to the client.
+ * @author Xiaoxiang Wu(xiaoxiaw)
+ * @author Ye Zhou (yezhou)
+ */
 public class RMIMessage implements Serializable {
 	private static final long serialVersionUID = 5927860882914402321L;
 
@@ -14,6 +23,9 @@ public class RMIMessage implements Serializable {
 	 * Look up the table to find the object
 	 */
 	private String methodName;
+	/**
+	 * The remote object reference who call this method
+	 */
 	private RemoteObjectReference ROR;
 	private Object[] args;
 	private Object returnValue;
@@ -51,7 +63,7 @@ public class RMIMessage implements Serializable {
 				} else {
 					argsTypes[i] = args[i].getClass();
 				}
-System.out.println("argsType: " + argsTypes[i]);
+//System.out.println("argsType: " + argsTypes[i]);
 			}
 		}
 		
@@ -68,16 +80,10 @@ System.out.println("argsType: " + argsTypes[i]);
 		this.methodName = methodName;
 	}
 
-	/**
-	 * @return the rOR
-	 */
 	public RemoteObjectReference getROR() {
 		return ROR;
 	}
 
-	/**
-	 * @param rOR the rOR to set
-	 */
 	public void setROR(RemoteObjectReference rOR) {
 		ROR = rOR;
 	}
