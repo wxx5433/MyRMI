@@ -11,6 +11,12 @@ import Communication.RMIMessage;
 import Remote.Remote640;
 import Stub.Stub;
 
+/**
+ * This is a helping class which is used to create proxy for a remote object.
+ * And can send RMIMessage to and receive RMIMessage from the dispatch server.
+ * @author Xiaoxiang Wu (xiaoxiaw)
+ * @author Ye Zhou (zhouye)
+ */
 public abstract class Util {
 	/**
 	 * Create a proxy here.
