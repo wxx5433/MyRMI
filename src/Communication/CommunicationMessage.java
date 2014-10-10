@@ -2,6 +2,12 @@ package Communication;
 
 import java.io.Serializable;
 
+/**
+ * This class defines the communication message between the dispatch server
+ * and the registry server.
+ * @author Xiaoxiang Wu(xiaoxiaw)
+ * @author Ye Zhou(yezhou)
+ */
 public class CommunicationMessage implements Serializable {
 
 	private static final long serialVersionUID = 3871209197799810883L;
@@ -43,5 +49,4 @@ public class CommunicationMessage implements Serializable {
 	public void setMessageType(MessageType messageType) {
 		this.messageType = messageType;
 	}
-
 }
