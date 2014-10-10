@@ -83,7 +83,7 @@ public class SocketListenThread implements Runnable {
 		if (messageType == MessageType.NewService) {
 			// message format: serviceName|IP|port
 			String[] fields = messageContents.split(" ");
-			if (fields.length != 3) {
+			if (fields.length != 4) {
 				replyMessage = new CommunicationMessage(
 						MessageType.ReplyToServer, "Bad format when add service!");
 				try {
@@ -97,7 +97,8 @@ public class SocketListenThread implements Runnable {
 			String serviceName = fields[0];
 			String ip = fields[1];
 			int port = Integer.parseInt(fields[2]);
-			replyMessage = registry.addService(serviceName, ip, port);
+			long objectKey = Integer.parseInt(fields[3]);
+			replyMessage = registry.addService(serviceName, ip, port, objectKey);
 			try {
 				out.writeObject(replyMessage);
 			} catch (IOException e) {
