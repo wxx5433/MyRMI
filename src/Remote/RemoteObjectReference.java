@@ -5,15 +5,31 @@ import Stub.Stub;
 import Util.Util;
 
 /**
+ * This class stores information for a remote object, including 
+ * ip and port of the dispatch server where the object is, the objectKey 
+ * which uniquely identify an object on the dispatch server, and the service's
+ * name.
  * @author Xiaoxiang Wu(xiaoxiaw)
  * @author Ye Zhou(zhouye)
  */
 public class RemoteObjectReference implements Serializable {
 	private static final long serialVersionUID = 3944776457281619555L;
 
+	/**
+	 * The dispatch node's ip where the object is located
+	 */
 	private String hostIP;
+	/**
+	 * The dispatch node's listening port where the object is located
+	 */
 	private int port;
-	private long objectKey;
+	/**
+	 * uniquely identify an object on one dispatch server
+	 */
+	private long objectKey;   
+	/**
+	 * The service's name
+	 */
 	private String remoteInterfaceName;
 	
 	public RemoteObjectReference(String ip, int port, String riname) {
@@ -85,5 +101,4 @@ public class RemoteObjectReference implements Serializable {
 	public void setRemoteInterfaceName(String remoteInterfaceName) {
 		this.remoteInterfaceName = remoteInterfaceName;
 	}
-	
 }

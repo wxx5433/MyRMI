@@ -12,12 +12,11 @@ import Exception.MyRemoteException;
 import Remote.RemoteObjectReference;
 
 /**
+ * This class is used by the server and the client to communicate with 
+ * the Registry server.
  * 
  * @author Xiaoxiang Wu (xiaoxiaw)
  * @author Ye Zhou (yezhou)
- *
- * This class is used by the server and the client to communicate with 
- * the Registry server.
  */
 public class RegistryCommunicator {
 	/**
@@ -26,13 +25,17 @@ public class RegistryCommunicator {
 	private String hostName;   
 	private int port;
 	
-
-	
 	public RegistryCommunicator (String hostName, int port) {
 		this.hostName = hostName;
 		this.port = port;
 	}
 	
+	/**
+	 * send clients' lookup request to the registry server 
+	 * @param serviceName the service name to lookup
+	 * @return RemoteObjectReference of this service object
+	 * @throws MyRemoteException
+	 */
 	public RemoteObjectReference lookup(String serviceName) throws MyRemoteException {
 		RemoteObjectReference ror = null;
 		try {
@@ -60,6 +63,12 @@ public class RegistryCommunicator {
 		return ror;
 	}
 	
+	/**
+	 * send dispatch servers' new service request to the registry server.
+	 * @param serviceName the new service name to rebind
+	 * @param serverIp dispatch server's ip
+	 * @param serverPort dispatch server's port
+	 */
 	public void rebind(String serviceName, String serverIp, int serverPort) {
 		try {
 			// connect the registry server

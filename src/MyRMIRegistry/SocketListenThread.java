@@ -41,6 +41,7 @@ public class SocketListenThread implements Runnable {
 					ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 					CommunicationMessage communicationMessage = 
 							(CommunicationMessage) in.readObject();
+					// parse message received
 					parseMessage(communicationMessage, socket);
 				} catch (IOException e) {
 					System.out.println("Error occur when listening:");
@@ -62,35 +63,35 @@ public class SocketListenThread implements Runnable {
 		stop = true;
 	}
 	
+	/**
+	 * parse the message received.
+	 * @param message the message to be parsed
+	 * @param socket the socket where to send reply message 
+	 */
 	public void parseMessage(CommunicationMessage message, Socket socket) {
 		ObjectOutputStream out = null;
 		try {
 			out = new ObjectOutputStream(socket.getOutputStream());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		MessageType messageType = message.getMessageType();
 		String messageContents = message.getMessage();
-System.out.println(messageContents);
+//System.out.println(messageContents);
 		CommunicationMessage replyMessage = null;
 		// rebind a new service
 		if (messageType == MessageType.NewService) {
 			// message format: serviceName|IP|port
 			String[] fields = messageContents.split(" ");
-for (int i = 0; i < fields.length; ++i) {
-	System.out.println(fields[i]);
-}
 			if (fields.length != 3) {
 				replyMessage = new CommunicationMessage(
 						MessageType.ReplyToServer, "Bad format when add service!");
 				try {
 					out.writeObject(replyMessage);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-System.out.println("Bad format when add service!");
+//System.out.println("Bad format when add service!");
 				return;
 			}
 			String serviceName = fields[0];
@@ -100,7 +101,6 @@ System.out.println("Bad format when add service!");
 			try {
 				out.writeObject(replyMessage);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else if (messageType == MessageType.LookUpService){    // look up service
@@ -109,11 +109,9 @@ System.out.println("Bad format when add service!");
 			try {
 				out.writeObject(ror);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
 	}
-	
 }
