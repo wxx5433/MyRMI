@@ -4,6 +4,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
 import Remote.Remote640;
+import Remote.RemoteObjectReference;
 import Util.InvokeTask;
 
 /**
@@ -16,10 +17,13 @@ import Util.InvokeTask;
  */
 public class DispatchExecutionThread implements Runnable {
 
+	private DispatchNode dispatchNode;
 	private InvokeTask invokeTask;
 
-	public DispatchExecutionThread(InvokeTask invokeTask) {
+	public DispatchExecutionThread(InvokeTask invokeTask,
+			DispatchNode dispatchNode) {
 		this.invokeTask = invokeTask;
+		this.dispatchNode = dispatchNode;
 	}
 
 	@Override
@@ -27,10 +31,17 @@ public class DispatchExecutionThread implements Runnable {
 		Remote640 serviceObject = invokeTask.getServiceObject();
 		try {
 			invokeTask.getMessage().call(serviceObject);
-			OutputStream outputStream = invokeTask.getSocket().getOutputStream();
-			ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+			if (invokeTask.getMessage().getReturnValue() instanceof Remote640) {
+				RemoteObjectReference ror = dispatchNode
+						.createRORFromRemote640(invokeTask);
+				invokeTask.getMessage().setReturnValue(ror);
+			}
+			OutputStream outputStream = invokeTask.getSocket()
+					.getOutputStream();
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(
+					outputStream);
 			objectOutputStream.writeObject(invokeTask.getMessage());
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

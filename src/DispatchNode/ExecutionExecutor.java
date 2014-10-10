@@ -43,7 +43,7 @@ class ExecutionExecutor implements Runnable {
 
 	public void execute(InvokeTask invokeTask) {
 		DispatchExecutionThread dispatchExecutionThread = new DispatchExecutionThread(
-				invokeTask);
+				invokeTask, dispatchNode);
 		Thread thread = new Thread(dispatchExecutionThread);
 		pool.execute(thread);
 	}

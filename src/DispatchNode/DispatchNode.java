@@ -1,6 +1,8 @@
 package DispatchNode;
 
+import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -8,7 +10,10 @@ import java.util.concurrent.LinkedBlockingDeque;
 import Communication.CommunicationMessage;
 import Communication.CommunicationMessage.MessageType;
 import Communication.RMIMessage;
+import MyRMIRegistry.MyLocateRegistry;
+import MyRMIRegistry.RegistryCommunicator;
 import Remote.Remote640;
+import Remote.RemoteObjectReference;
 import Util.InvokeTask;
 import Util.NodeID;
 import Util.ServiceID;
@@ -95,15 +100,48 @@ public class DispatchNode {
 		newInvokeRequest(invokeRequest, socket);
 	}
 
-	public void createRORFromRemote640(InvokeTask invokeTask) {
-
+	public RemoteObjectReference createRORFromRemote640(InvokeTask invokeTask) {
+		String serviceName = invokeTask.getMessage().getROR()
+				.getRemoteInterfaceName();
+		Remote640 returnObject = (Remote640) invokeTask.getMessage()
+				.getReturnValue();
+		long newkey = getAvailableKeys(serviceName, returnObject);
+		if (newkey != -1) {
+			RemoteObjectReference ror = sendNewService(serviceName);
+			ror.setObjectKey(newkey);
+			return ror;
+		}
+		return null;
 	}
 
-	private void sendNewService() {
-
+	private long getAvailableKeys(String serviceName, Remote640 returnObject) {
+		for (long i = 0; i <= Long.MAX_VALUE; i++) {
+			ServiceID serviceID = new ServiceID(serviceName, i);
+			if (!serviceManager.contains(serviceID)) {
+				serviceManager.put(serviceID, returnObject);
+				return i;
+			}
+		}
+		return -1;
 	}
 
-	private void startNewServiceByClient(RMIMessage invokeRequest, Socket socket) {
+	private RemoteObjectReference sendNewService(String serviceName) {
+		RegistryCommunicator rc = null;
+		try {
+			rc = MyLocateRegistry.getRegistry();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		rc.rebind(serviceName, dispatchNodeID.getHostName(),
+				dispatchNodeID.getPort());
+		RemoteObjectReference ror = new RemoteObjectReference(
+				dispatchNodeID.getHostName(), dispatchNodeID.getPort(),
+				serviceName);
+		return ror;
 	}
 
 	private void addNewServiceToManagement(ServiceID serviceID,

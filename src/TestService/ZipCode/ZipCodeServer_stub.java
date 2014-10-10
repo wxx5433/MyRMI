@@ -1,18 +1,17 @@
-package TestService;
+package TestService.ZipCode;
 
-import Remote.RemoteObjectReference;
 import Stub.Stub;
 
-public class ZipCodeServer_stub extends Stub implements ZipCodeServer{
-	
+public class ZipCodeServer_stub extends Stub implements ZipCodeServer {
+
 	public ZipCodeServer_stub() {
-		
+
 	}
 
 	@Override
 	public void initialize(ZipCodeList newlist) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -30,6 +29,6 @@ public class ZipCodeServer_stub extends Stub implements ZipCodeServer{
 	@Override
 	public void printAll() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
