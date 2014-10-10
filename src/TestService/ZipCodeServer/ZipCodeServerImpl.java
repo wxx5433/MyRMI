@@ -1,4 +1,4 @@
-package TestService.ZipCode;
+package TestService.ZipCodeServer;
 
 import java.io.IOException;
 

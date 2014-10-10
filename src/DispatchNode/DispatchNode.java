@@ -3,6 +3,7 @@ package DispatchNode;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Map;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -27,7 +28,7 @@ import Util.ServiceID;
  * @author Ye Zhou(yezhou)
  */
 public class DispatchNode {
-	private static final String DEFAULT_DISPATCH_ADDRESS = "128.237.163.210";
+	private static final String DEFAULT_DISPATCH_ADDRESS = "128.237.217.63";
 	private static final int DEFAULT_SLOT_NUM = 10;
 	private static final int DEFAULT_LISTEN_PORT = 11112;
 
@@ -84,7 +85,8 @@ public class DispatchNode {
 		String serviceName = invokeRequest.getROR().getRemoteInterfaceName();
 		Class<?> serviceClass = null;
 		try {
-			serviceClass = Class.forName("TestService." + serviceName + "Impl");
+			serviceClass = Class.forName("TestService." + serviceName + "."
+					+ serviceName + "Impl");
 		} catch (ClassNotFoundException e1) {
 			e1.printStackTrace();
 		}
@@ -186,4 +188,30 @@ public class DispatchNode {
 		}
 	}
 
+	public RemoteObjectReference getROR(InvokeTask invokeTask) {
+		ServiceID serviceID = checkInMap(invokeTask);
+		if (serviceID != null) {
+			return createRORFromServiceID(serviceID);
+		} else {
+			return createRORFromRemote640(invokeTask);
+		}
+	}
+
+	private RemoteObjectReference createRORFromServiceID(ServiceID serviceID) {
+		RemoteObjectReference ror = new RemoteObjectReference(
+				dispatchNodeID.getHostName(), dispatchNodeID.getPort(),
+				serviceID.getSericeName());
+		ror.setObjectKey(serviceID.getKey());
+		return ror;
+	}
+
+	private ServiceID checkInMap(InvokeTask invokeTask) {
+		Remote640 object = (Remote640) invokeTask.getMessage().getReturnValue();
+		for (Map.Entry<ServiceID, Remote640> m : serviceManager.entrySet()) {
+			if (m.getValue().equals(object)) {
+				return m.getKey();
+			}
+		}
+		return null;
+	}
 }

@@ -1,4 +1,4 @@
-package TestService.NameService;
+package TestService.NameServer;
 
 import java.io.IOException;
 
@@ -32,13 +32,21 @@ public class NameServerClient {
 
 		// get the proxy
 		NameServer nameServerFirst = (NameServer) ror.localize();
+		System.out.println(nameServerFirst.getServiceName());
 		NameServer nameServerSecond = nameServerFirst.add(serviceName + "2",
 				ror, nameServerFirst);
+		System.out.println(nameServerSecond.getServiceName());
 		NameServer nameServerThird = nameServerSecond.add(serviceName + "3",
 				ror, nameServerSecond);
-		NameServer nameServerMatched = (NameServer) nameServerThird.next()
-				.match(serviceName).localize();
-		System.out.println(nameServerMatched.getServiceName());
+		System.out.println(nameServerThird.getServiceName());
+		NameServer nameServerNext = nameServerThird.next();
+		System.out.println(nameServerNext.getServiceName());
+		RemoteObjectReference rornew = nameServerThird.match(serviceName + "3");
+		System.out.println(rornew.getHostIP());
+		rornew.localize();
+		// NameServer nameServerMatched = (NameServer) (nameServerThird
+		// .match(serviceName + "3").localize());
+		// System.out.println(nameServerMatched.getServiceName());
 
 	}
 }

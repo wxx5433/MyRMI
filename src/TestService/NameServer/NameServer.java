@@ -1,4 +1,4 @@
-package TestService.NameService;
+package TestService.NameServer;
 
 import Remote.Remote640;
 import Remote.RemoteObjectReference;

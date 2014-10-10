@@ -1,4 +1,4 @@
-package TestService.ZipCode;
+package TestService.ZipCodeServer;
 
 //a client for ZipCodeServer.
 //it uses ZipCodeServer as an interface, and test all methods.

@@ -32,8 +32,8 @@ public class DispatchExecutionThread implements Runnable {
 		try {
 			invokeTask.getMessage().call(serviceObject);
 			if (invokeTask.getMessage().getReturnValue() instanceof Remote640) {
-				RemoteObjectReference ror = dispatchNode
-						.createRORFromRemote640(invokeTask);
+				RemoteObjectReference ror = dispatchNode.getROR(invokeTask);
+
 				invokeTask.getMessage().setReturnValue(ror);
 			}
 			OutputStream outputStream = invokeTask.getSocket()

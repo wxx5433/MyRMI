@@ -7,11 +7,12 @@ import Remote.Remote640;
 import Remote.RemoteObjectReference;
 
 /**
- * The class is used between the client and the dispatch server.
- * The proxy will marshal clients' remote method invocation into <code>RMIMessage</code>,
- * and then send it to the dispatch server.
- * The dispatch server then unmarshal the <code>RMIMessage</code> and call the method locally,
- * and put the return value into <code>RMIMessage</code> and send it back to the client.
+ * The class is used between the client and the dispatch server. The proxy will
+ * marshal clients' remote method invocation into <code>RMIMessage</code>, and
+ * then send it to the dispatch server. The dispatch server then unmarshal the
+ * <code>RMIMessage</code> and call the method locally, and put the return value
+ * into <code>RMIMessage</code> and send it back to the client.
+ * 
  * @author Xiaoxiang Wu(xiaoxiaw)
  * @author Ye Zhou (yezhou)
  */
@@ -19,8 +20,7 @@ public class RMIMessage implements Serializable {
 	private static final long serialVersionUID = 5927860882914402321L;
 
 	/**
-	 * The method name to invoke. 
-	 * Look up the table to find the object
+	 * The method name to invoke. Look up the table to find the object
 	 */
 	private String methodName;
 	/**
@@ -30,8 +30,9 @@ public class RMIMessage implements Serializable {
 	private Object[] args;
 	private Object returnValue;
 	private Exception exception;
-	
-	public RMIMessage(RemoteObjectReference ror, String methodName, Object[] args) {
+
+	public RMIMessage(RemoteObjectReference ror, String methodName,
+			Object[] args) {
 		setROR(ror);
 		setMethodName(methodName);
 		setArgs(args);
@@ -40,17 +41,18 @@ public class RMIMessage implements Serializable {
 	}
 
 	/**
-	 * This method should be invoked by the server.
-	 * Then the server will call the specific method locally,
-	 * and marshaled the return value into RMIMessage.
-	 * @param object 
+	 * This method should be invoked by the server. Then the server will call
+	 * the specific method locally, and marshaled the return value into
+	 * RMIMessage.
+	 * 
+	 * @param object
 	 * @throws Exception
 	 */
 	public void call(Object object) throws Exception {
 		if (object == null || methodName == null) {
 			throw new Exception("bad invoke");
 		}
-		
+
 		Class<?>[] argsTypes = null;
 		// have arguments, then parse the types
 		if (args != null) {
@@ -63,15 +65,15 @@ public class RMIMessage implements Serializable {
 				} else {
 					argsTypes[i] = args[i].getClass();
 				}
-//System.out.println("argsType: " + argsTypes[i]);
+				System.out.println("argsType: " + argsTypes[i]);
 			}
 		}
-		
+
 		// invoke the method at server
 		Method method = object.getClass().getMethod(methodName, argsTypes);
 		returnValue = method.invoke(object, args);
 	}
-	
+
 	public String getMethodName() {
 		return methodName;
 	}

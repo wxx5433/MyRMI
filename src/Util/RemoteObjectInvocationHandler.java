@@ -1,5 +1,6 @@
 package Util;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.Socket;
@@ -10,15 +11,21 @@ import Remote.RemoteObjectReference;
 import Stub.Stub;
 
 /**
- * This class is used by the proxy to send remote object's method invocation 
- * directly to remote server and get return value to the client.
- * The process is transparent to the client.
+ * This class is used by the proxy to send remote object's method invocation
+ * directly to remote server and get return value to the client. The process is
+ * transparent to the client.
+ * 
  * @author Xiaoxiang Wu (xiaoxiaw)
  * @author Ye Zhou (zhouye)
  */
-public class RemoteObjectInvocationHandler implements InvocationHandler {
+public class RemoteObjectInvocationHandler implements InvocationHandler,
+		Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1113652095921737819L;
 	private Stub stub = null;
-	
+
 	public RemoteObjectInvocationHandler(Stub stub) {
 		this.stub = stub;
 	}
@@ -33,19 +40,22 @@ public class RemoteObjectInvocationHandler implements InvocationHandler {
 		RemoteObjectReference ror = stub.getRemoteObjectReference();
 		RMIMessage sendMessage = new RMIMessage(ror, method.getName(), args);
 		Socket socket = new Socket(ror.getHostIP(), ror.getPort());
-		Util.sendRemoteCallRequest(socket, sendMessage);
-		
+		ProxyMessenger.sendRemoteCallRequest(socket, sendMessage);
+
 		RMIMessage responseMessage = null;
 		// receive response.
 		try {
-			responseMessage = Util.getRemoteCallResponse(socket);
+			responseMessage = ProxyMessenger.getRemoteCallResponse(socket);
 		} catch (MyRemoteException e) {
 			throw e;
 		}
-		
+
 		Object returnValue = responseMessage.getReturnValue();
+		if (returnValue instanceof RemoteObjectReference) {
+			returnValue = ((RemoteObjectReference) returnValue).localize();
+		}
 		socket.close();
-		
+
 		return returnValue;
 	}
 }

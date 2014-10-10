@@ -19,7 +19,7 @@ import Exception.MyRemoteException;
 import MyRMIRegistry.MyLocateRegistry;
 import MyRMIRegistry.RegistryCommunicator;
 import Remote.RemoteObjectReference;
-import TestService.ZipCode.ZipCodeList;
+import TestService.ZipCodeServer.ZipCodeList;
 
 public class ZipCodeRListClient {
 

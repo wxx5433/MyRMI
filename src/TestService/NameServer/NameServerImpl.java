@@ -1,4 +1,4 @@
-package TestService.NameService;
+package TestService.NameServer;
 
 import java.io.IOException;
 

@@ -1,14 +1,15 @@
 package Remote;
 
 import java.io.Serializable;
+
 import Stub.Stub;
-import Util.Util;
+import Util.ProxyMessenger;
 
 /**
- * This class stores information for a remote object, including 
- * ip and port of the dispatch server where the object is, the objectKey 
- * which uniquely identify an object on the dispatch server, and the service's
- * name.
+ * This class stores information for a remote object, including ip and port of
+ * the dispatch server where the object is, the objectKey which uniquely
+ * identify an object on the dispatch server, and the service's name.
+ * 
  * @author Xiaoxiang Wu(xiaoxiaw)
  * @author Ye Zhou(zhouye)
  */
@@ -26,37 +27,38 @@ public class RemoteObjectReference implements Serializable {
 	/**
 	 * uniquely identify an object on one dispatch server
 	 */
-	private long objectKey;   
+	private long objectKey;
 	/**
 	 * The service's name
 	 */
 	private String remoteInterfaceName;
-	
+
 	public RemoteObjectReference(String ip, int port, String riname) {
 		setHostIP(ip);
 		setPort(port);
 		setRemoteInterfaceName(riname);
 		setObjectKey(-1);
 	}
-	
+
 	/**
-	 * Localize the <code>RemoteObjectReference</code>, return the proxy for 
-	 * the remote object. 
-	 * Then the client can use the proxy to invoke remote method 
-	 * without knowing the details of remote invocation. 
-	 * The proxy sends the remote invocation message to the server.
+	 * Localize the <code>RemoteObjectReference</code>, return the proxy for the
+	 * remote object. Then the client can use the proxy to invoke remote method
+	 * without knowing the details of remote invocation. The proxy sends the
+	 * remote invocation message to the server.
+	 * 
 	 * @return a proxy
 	 */
 	public Remote640 localize() {
-		String stubClassName = "TestService." + remoteInterfaceName + "_stub";
+		String stubClassName = "TestService." + remoteInterfaceName + "."
+				+ remoteInterfaceName + "_stub";
 		Remote640 proxy = null;
-		
+
 		try {
 			Class<?> stubClass = Class.forName(stubClassName);
 			Stub stub = (Stub) stubClass.newInstance();
 			stub.setRemoteObjectReference(this);
-			proxy = Util.createProxy(stub);
-			
+			proxy = ProxyMessenger.createProxy(stub);
+
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
