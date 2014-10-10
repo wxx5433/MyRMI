@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import Communication.RMIMessage;
+import Exception.MyRemoteException;
 import Remote.Remote640;
 import Stub.Stub;
 
@@ -55,12 +56,16 @@ public abstract class Util {
 	 * receive the result of a remote call from the server.
 	 * @param socket socket connection with the server
 	 * @return return value from the remote function call.
+	 * @throws MyRemoteException 
 	 */
-	public static RMIMessage getRemoteCallResponse(Socket socket) {
+	public static RMIMessage getRemoteCallResponse(Socket socket) throws MyRemoteException {
 		RMIMessage response = null;
 		try {
 			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 			response = (RMIMessage) in.readObject();
+			if (response.getException() != null) {
+				throw new MyRemoteException(response.getException());
+			}
 //			in.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

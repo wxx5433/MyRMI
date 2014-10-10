@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 
 import Communication.RMIMessage;
+import Exception.MyRemoteException;
 import Remote.RemoteObjectReference;
 import Stub.Stub;
 
@@ -27,15 +28,20 @@ public class RemoteObjectInvocationHandler implements InvocationHandler {
 	 */
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args)
-			throws Throwable {
+			throws Throwable, MyRemoteException {
 		// send requests.
 		RemoteObjectReference ror = stub.getRemoteObjectReference();
 		RMIMessage sendMessage = new RMIMessage(ror, method.getName(), args);
 		Socket socket = new Socket(ror.getHostIP(), ror.getPort());
 		Util.sendRemoteCallRequest(socket, sendMessage);
-
+		
+		RMIMessage responseMessage = null;
 		// receive response.
-		RMIMessage responseMessage = Util.getRemoteCallResponse(socket);
+		try {
+			responseMessage = Util.getRemoteCallResponse(socket);
+		} catch (MyRemoteException e) {
+			throw e;
+		}
 		
 		Object returnValue = responseMessage.getReturnValue();
 		socket.close();
