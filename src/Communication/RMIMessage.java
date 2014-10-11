@@ -29,6 +29,7 @@ public class RMIMessage implements Serializable {
 	private RemoteObjectReference ROR;
 	private Object[] args;
 	private Object returnValue;
+	private boolean returnROR;
 	private Exception exception;
 
 	public RMIMessage(RemoteObjectReference ror, String methodName,
@@ -38,6 +39,7 @@ public class RMIMessage implements Serializable {
 		setArgs(args);
 		setReturnValue(null);
 		setException(null);
+		setReturnROR(false);
 	}
 
 	/**
@@ -112,5 +114,13 @@ public class RMIMessage implements Serializable {
 
 	public void setException(Exception exception) {
 		this.exception = exception;
+	}
+
+	public boolean isReturnROR() {
+		return returnROR;
+	}
+
+	public void setReturnROR(boolean returnROR) {
+		this.returnROR = returnROR;
 	}
 }

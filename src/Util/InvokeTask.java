@@ -10,8 +10,7 @@ public class InvokeTask {
 	private Socket socket;
 	private Remote640 serviceObject;
 
-	public InvokeTask(RMIMessage message, Socket socket,
-			Remote640 serviceObject) {
+	public InvokeTask(RMIMessage message, Socket socket, Remote640 serviceObject) {
 		this.message = message;
 		this.socket = socket;
 		this.serviceObject = serviceObject;

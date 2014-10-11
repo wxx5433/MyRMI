@@ -1,11 +1,13 @@
 package TestService.NameServer;
 
 import java.io.IOException;
+import java.lang.reflect.Proxy;
 
 import Exception.MyRemoteException;
 import MyRMIRegistry.MyLocateRegistry;
 import MyRMIRegistry.RegistryCommunicator;
 import Remote.RemoteObjectReference;
+import Util.RemoteObjectInvocationHandler;
 
 public class NameServerClient {
 
@@ -29,24 +31,24 @@ public class NameServerClient {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		// get the proxy
 		NameServer nameServerFirst = (NameServer) ror.localize();
-		System.out.println(nameServerFirst.getServiceName());
+		// System.out.println(nameServerFirst.getServiceName());
 		NameServer nameServerSecond = nameServerFirst.add(serviceName + "2",
-				ror, nameServerFirst);
-		System.out.println(nameServerSecond.getServiceName());
+				((RemoteObjectInvocationHandler) Proxy
+						.getInvocationHandler(nameServerFirst)).getStub()
+						.getRemoteObjectReference(), nameServerFirst);
+		// System.out.println(nameServerSecond.getServiceName());
 		NameServer nameServerThird = nameServerSecond.add(serviceName + "3",
-				ror, nameServerSecond);
-		System.out.println(nameServerThird.getServiceName());
+				((RemoteObjectInvocationHandler) Proxy
+						.getInvocationHandler(nameServerSecond)).getStub()
+						.getRemoteObjectReference(), nameServerSecond);
+		// System.out.println(nameServerThird.getServiceName());
 		NameServer nameServerNext = nameServerThird.next();
-		System.out.println(nameServerNext.getServiceName());
-		RemoteObjectReference rornew = nameServerThird.match(serviceName + "3");
-		System.out.println(rornew.getHostIP());
-		rornew.localize();
-		// NameServer nameServerMatched = (NameServer) (nameServerThird
-		// .match(serviceName + "3").localize());
-		// System.out.println(nameServerMatched.getServiceName());
+		// System.out.println(nameServerNext.getServiceName());
+		NameServer nameServerMatched = (NameServer) (nameServerThird
+				.match(serviceName + "3").localize());
+		System.out.println(nameServerMatched.getServiceName());
 
 	}
 }

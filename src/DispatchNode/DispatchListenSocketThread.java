@@ -39,9 +39,8 @@ public class DispatchListenSocketThread implements Runnable {
 					ObjectInputStream inputStream = new ObjectInputStream(input);
 					RMIMessage invokeRequest = (RMIMessage) inputStream
 							.readObject();
-//					ObjectOutputStream outputStream = new ObjectOutputStream(
-//							socket.getOutputStream());
-					System.out.println("InvokeRequest");
+					// ObjectOutputStream outputStream = new ObjectOutputStream(
+					// socket.getOutputStream());
 					dispatchNode.newInvokeRequest(invokeRequest, socket);
 				} catch (IOException e) {
 					System.out.println("Error occur when listening:");
