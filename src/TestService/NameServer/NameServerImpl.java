@@ -31,9 +31,15 @@ public class NameServerImpl implements NameServer {
 
 	@Override
 	public RemoteObjectReference match(String name) {
-		if (name.equals(serviceName))
+		if (name.equals(serviceName)) {
+			System.out.println("match success!");
+			if (ro == null) {
+				System.out.println("ROR is empty");
+			} else {
+				System.out.println(ro.getHostIP() + "______" + ro.getPort());
+			}
 			return ro;
-		else
+		} else
 			return null;
 	}
 

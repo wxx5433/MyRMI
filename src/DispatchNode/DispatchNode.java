@@ -29,7 +29,7 @@ import Util.ServiceID;
  */
 public class DispatchNode {
 	private static final String DEFAULT_DISPATCH_ADDRESS = "128.237.217.63";
-	private static final int DEFAULT_SLOT_NUM = 10;
+	private static final int DEFAULT_SLOT_NUM = 1;
 	private static final int DEFAULT_LISTEN_PORT = 11112;
 
 	private NodeID dispatchNodeID;
@@ -108,6 +108,7 @@ public class DispatchNode {
 		Remote640 returnObject = (Remote640) invokeTask.getMessage()
 				.getReturnValue();
 		long newkey = getAvailableKeys(serviceName, returnObject);
+		System.out.println("Available key: " + newkey);
 		if (newkey != -1) {
 			RemoteObjectReference ror = sendNewService(serviceName, newkey);
 			ror.setObjectKey(newkey);
@@ -117,10 +118,14 @@ public class DispatchNode {
 	}
 
 	private long getAvailableKeys(String serviceName, Remote640 returnObject) {
-		for (long i = 0; i <= Long.MAX_VALUE; i++) {
+		for (Map.Entry<ServiceID, Remote640> m : serviceManager.entrySet()) {
+			System.out.println("key" + m.getKey().toString());
+		}
+		for (long i = 1; i <= Long.MAX_VALUE; i++) {
 			ServiceID serviceID = new ServiceID(serviceName, i);
-			if (!serviceManager.contains(serviceID)) {
+			if (!serviceManager.containsKey(serviceID)) {
 				serviceManager.put(serviceID, returnObject);
+				System.out.println("new add service:" + serviceID.toString());
 				return i;
 			}
 		}
@@ -148,6 +153,7 @@ public class DispatchNode {
 
 	private void addNewServiceToManagement(ServiceID serviceID,
 			Remote640 serviceObject) {
+		System.out.println("add new service from client request:" + serviceID);
 		serviceManager.put(serviceID, serviceObject);
 	}
 
@@ -165,6 +171,38 @@ public class DispatchNode {
 		} else {
 			startNewService(invokeRequest, socket);
 		}
+	}
+
+	public RemoteObjectReference getROR(InvokeTask invokeTask) {
+		ServiceID serviceID = checkInMap(invokeTask);
+		if (serviceID != null) {
+			return createRORFromServiceID(serviceID);
+		} else {
+			return createRORFromRemote640(invokeTask);
+		}
+	}
+
+	private RemoteObjectReference createRORFromServiceID(ServiceID serviceID) {
+		RemoteObjectReference ror = new RemoteObjectReference(
+				dispatchNodeID.getHostName(), dispatchNodeID.getPort(),
+				serviceID.getSericeName());
+		System.out.println("ROR's serviceName is:" + serviceID.getSericeName());
+		ror.setObjectKey(serviceID.getKey());
+		return ror;
+	}
+
+	private ServiceID checkInMap(InvokeTask invokeTask) {
+		Remote640 object = (Remote640) invokeTask.getMessage().getReturnValue();
+		System.out.println("Start to find " + object.toString());
+		for (Map.Entry<ServiceID, Remote640> m : serviceManager.entrySet()) {
+			System.out.println(m.getKey().toString() + "____"
+					+ m.getValue().toString());
+			if (m.getValue().equals(object)) {
+				System.out.println("Found it!" + m.getKey().toString());
+				return m.getKey();
+			}
+		}
+		return null;
 	}
 
 	public void recieveFeedBack(CommunicationMessage message) {
@@ -188,30 +226,4 @@ public class DispatchNode {
 		}
 	}
 
-	public RemoteObjectReference getROR(InvokeTask invokeTask) {
-		ServiceID serviceID = checkInMap(invokeTask);
-		if (serviceID != null) {
-			return createRORFromServiceID(serviceID);
-		} else {
-			return createRORFromRemote640(invokeTask);
-		}
-	}
-
-	private RemoteObjectReference createRORFromServiceID(ServiceID serviceID) {
-		RemoteObjectReference ror = new RemoteObjectReference(
-				dispatchNodeID.getHostName(), dispatchNodeID.getPort(),
-				serviceID.getSericeName());
-		ror.setObjectKey(serviceID.getKey());
-		return ror;
-	}
-
-	private ServiceID checkInMap(InvokeTask invokeTask) {
-		Remote640 object = (Remote640) invokeTask.getMessage().getReturnValue();
-		for (Map.Entry<ServiceID, Remote640> m : serviceManager.entrySet()) {
-			if (m.getValue().equals(object)) {
-				return m.getKey();
-			}
-		}
-		return null;
-	}
 }

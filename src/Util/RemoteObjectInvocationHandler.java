@@ -51,14 +51,15 @@ public class RemoteObjectInvocationHandler implements InvocationHandler,
 		}
 
 		Object returnValue = responseMessage.getReturnValue();
-		if (returnValue instanceof RemoteObjectReference) {
+		if (returnValue instanceof RemoteObjectReference
+				&& responseMessage.isReturnROR()) {
 			returnValue = ((RemoteObjectReference) returnValue).localize();
 		}
 		socket.close();
 
 		return returnValue;
 	}
-	
+
 	public Stub getStub() {
 		return stub;
 	}
