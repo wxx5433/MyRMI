@@ -65,7 +65,7 @@ public class ZipCodeServerImpl implements ZipCodeServer {
 	public static void main(String[] args) {
 		RegistryCommunicator rc = null;
 		try {
-			rc = MyLocateRegistry.getRegistry();
+			rc = MyLocateRegistry.getRegistry(args[0], Integer.parseInt(args[1]));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

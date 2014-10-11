@@ -148,7 +148,12 @@ public class RegistryServer {
 	}
 
 	public static void main(String[] args) throws Exception {
-		RegistryServer registry = new RegistryServer();
+		RegistryServer registry = null; 
+		if (args.length == 2) {
+			registry = new RegistryServer(args[0], Integer.parseInt(args[1]));
+		} else {
+			registry = new RegistryServer();
+		}
 		// start listening for incoming request
 		registry.start();
 	}
