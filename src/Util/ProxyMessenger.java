@@ -3,6 +3,7 @@ package Util;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Proxy;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -31,7 +32,7 @@ public abstract class ProxyMessenger {
 	public static Remote640 createProxy(Stub stub) {
 		RemoteObjectInvocationHandler handler = new RemoteObjectInvocationHandler(
 				stub);
-		Remote640 proxy = (Remote640) MyProxy.newProxyInstance(stub.getClass()
+		Remote640 proxy = (Remote640) Proxy.newProxyInstance(stub.getClass()
 				.getClassLoader(), stub.getClass().getInterfaces(), handler);
 		return proxy;
 	}
