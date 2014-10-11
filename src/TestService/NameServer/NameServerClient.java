@@ -33,19 +33,19 @@ public class NameServerClient {
 		}
 		// get the proxy
 		NameServer nameServerFirst = (NameServer) ror.localize();
-		// System.out.println(nameServerFirst.getServiceName());
+		System.out.println(nameServerFirst.getServiceName());
 		NameServer nameServerSecond = nameServerFirst.add(serviceName + "2",
 				((RemoteObjectInvocationHandler) Proxy
 						.getInvocationHandler(nameServerFirst)).getStub()
 						.getRemoteObjectReference(), nameServerFirst);
-		// System.out.println(nameServerSecond.getServiceName());
+		System.out.println(nameServerSecond.getServiceName());
 		NameServer nameServerThird = nameServerSecond.add(serviceName + "3",
 				((RemoteObjectInvocationHandler) Proxy
 						.getInvocationHandler(nameServerSecond)).getStub()
 						.getRemoteObjectReference(), nameServerSecond);
-		// System.out.println(nameServerThird.getServiceName());
+		System.out.println(nameServerThird.getServiceName());
 		NameServer nameServerNext = nameServerThird.next();
-		// System.out.println(nameServerNext.getServiceName());
+		System.out.println(nameServerNext.getServiceName());
 		NameServer nameServerMatched = (NameServer) (nameServerThird
 				.match(serviceName + "3").localize());
 		System.out.println(nameServerMatched.getServiceName());

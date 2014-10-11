@@ -90,6 +90,7 @@ public class ZipCodeRListClient {
 		rtemp = rl;
 		while (temp != null) {
 			// here is a test.
+			System.out.println(rtemp.print());
 			String res = rtemp.find(temp.city);
 			System.out.println("city: " + temp.city + ", " + "code: " + res);
 			temp = temp.next;

@@ -29,7 +29,7 @@ import Util.ServiceID;
  */
 public class DispatchNode {
 	private static final String DEFAULT_DISPATCH_ADDRESS = "128.237.217.63";
-	private static final int DEFAULT_SLOT_NUM = 1;
+	private static final int DEFAULT_SLOT_NUM = 10;
 	private static final int DEFAULT_LISTEN_PORT = 11112;
 
 	private NodeID dispatchNodeID;
@@ -118,9 +118,6 @@ public class DispatchNode {
 	}
 
 	private long getAvailableKeys(String serviceName, Remote640 returnObject) {
-		for (Map.Entry<ServiceID, Remote640> m : serviceManager.entrySet()) {
-			System.out.println("key" + m.getKey().toString());
-		}
 		for (long i = 1; i <= Long.MAX_VALUE; i++) {
 			ServiceID serviceID = new ServiceID(serviceName, i);
 			if (!serviceManager.containsKey(serviceID)) {
@@ -186,7 +183,6 @@ public class DispatchNode {
 		RemoteObjectReference ror = new RemoteObjectReference(
 				dispatchNodeID.getHostName(), dispatchNodeID.getPort(),
 				serviceID.getSericeName());
-		System.out.println("ROR's serviceName is:" + serviceID.getSericeName());
 		ror.setObjectKey(serviceID.getKey());
 		return ror;
 	}

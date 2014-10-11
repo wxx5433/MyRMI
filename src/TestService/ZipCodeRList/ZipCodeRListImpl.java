@@ -57,4 +57,9 @@ public class ZipCodeRListImpl implements ZipCodeRList {
 		}
 		rc.rebind(args[0], args[1], 11112);
 	}
+
+	@Override
+	public String print() {
+		return city + "____" + zipcode;
+	}
 }

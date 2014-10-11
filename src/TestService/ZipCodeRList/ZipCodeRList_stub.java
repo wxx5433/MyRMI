@@ -22,4 +22,10 @@ public class ZipCodeRList_stub extends Stub implements ZipCodeRList {
 		return null;
 	}
 
+	@Override
+	public String print() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

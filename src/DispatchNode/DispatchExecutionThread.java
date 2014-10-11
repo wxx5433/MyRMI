@@ -41,10 +41,6 @@ public class DispatchExecutionThread implements Runnable {
 			}
 			System.out.println("Send back result----"
 					+ invokeTask.getMessage().getMethodName());
-			if (invokeTask.getMessage().getReturnValue() instanceof RemoteObjectReference) {
-				System.out.println(((RemoteObjectReference) (invokeTask
-						.getMessage().getReturnValue())).getHostIP());
-			}
 			OutputStream outputStream = invokeTask.getSocket()
 					.getOutputStream();
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(

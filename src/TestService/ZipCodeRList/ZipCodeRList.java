@@ -8,4 +8,6 @@ public interface ZipCodeRList extends Remote640 {
 	public ZipCodeRList add(String city, String zipcode);
 
 	public ZipCodeRList next();
+
+	public String print();
 }
