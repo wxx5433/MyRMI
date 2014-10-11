@@ -76,7 +76,7 @@ public class RegistryServer {
 			remoteObjectTable.put(serviceName, services);
 			replyMessage = new CommunicationMessage(MessageType.ReplyToServer,
 					"Add service Successfully!");
-			// System.out.println("Add service successfully!");
+			 System.out.println("Add service successfully!");
 		} else { // new service with same name
 			// check if this service has already on this server, if it is, then
 			// ignore this service.
@@ -85,7 +85,7 @@ public class RegistryServer {
 				replyMessage = new CommunicationMessage(
 						MessageType.ReplyToServer,
 						"Add failed: Duplicate services on the same server");
-				// System.out.println("Add failed: duplicate service on the same server");
+				 System.out.println("Add failed: duplicate service on the same server");
 			} else {
 				services = new ConcurrentHashMap<NodeID, Long>();
 				if (objectKey != -1) { // already new a object on dispatch
@@ -96,7 +96,7 @@ public class RegistryServer {
 				}
 				replyMessage = new CommunicationMessage(
 						MessageType.ReplyToServer, "Add service Successfully!");
-				// System.out.println("Add service successfully!");
+				 System.out.println("Add service successfully!");
 			}
 		}
 		return replyMessage;
