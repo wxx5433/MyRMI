@@ -217,7 +217,7 @@ public class DispatchNode {
 			dispatchNode.start();
 		} else if (args.length == 3) {
 			DispatchNode dispatchNode = new DispatchNode(args[0],
-					Integer.parseInt(args[1]), Integer.parseInt(args[4]));
+					Integer.parseInt(args[1]), Integer.parseInt(args[2]));
 			dispatchNode.start();
 		}
 	}

@@ -151,6 +151,7 @@ public class RegistryServer {
 		RegistryServer registry = null; 
 		if (args.length == 2) {
 			registry = new RegistryServer(args[0], Integer.parseInt(args[1]));
+
 		} else {
 			registry = new RegistryServer();
 		}

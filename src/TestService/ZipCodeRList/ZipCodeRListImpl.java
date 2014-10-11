@@ -50,12 +50,12 @@ public class ZipCodeRListImpl implements ZipCodeRList {
 	public static void main(String[] args) {
 		RegistryCommunicator rc = null;
 		try {
-			rc = MyLocateRegistry.getRegistry(args[0], Integer.parseInt(args[1]));
+			rc = MyLocateRegistry.getRegistry(args[3], Integer.parseInt(args[4]));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		rc.rebind(args[0], args[1], 11112);
+		rc.rebind(args[0], args[1], Integer.parseInt(args[2]));
 	}
 
 	@Override
