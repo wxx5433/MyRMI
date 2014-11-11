@@ -34,6 +34,8 @@ public class DispatchNode {
 
 	private NodeID dispatchNodeID;
 	private int listenPort;
+	private String registryNodeAddress;
+	private int registryPort;
 	private ConcurrentHashMap<ServiceID, Remote640> serviceManager = new ConcurrentHashMap<ServiceID, Remote640>();
 	public BlockingDeque<InvokeTask> invokeRequestQueue = new LinkedBlockingDeque<InvokeTask>();
 
@@ -48,9 +50,11 @@ public class DispatchNode {
 		this.listenPort = DEFAULT_LISTEN_PORT;
 	}
 
-	public DispatchNode(String dispatchName, int portNum, int listenPort) {
-		dispatchNodeID = new NodeID(dispatchName, portNum);
+	public DispatchNode(String dispatchName, int listenPort, String registryAddress, int registryPort) {
+		dispatchNodeID = new NodeID(dispatchName, listenPort);
 		this.listenPort = listenPort;
+		this.registryNodeAddress = registryAddress;
+		this.registryPort = registryPort;
 	}
 
 	/**
@@ -132,7 +136,7 @@ public class DispatchNode {
 	private RemoteObjectReference sendNewService(String serviceName, long newkey) {
 		RegistryCommunicator rc = null;
 		try {
-			rc = MyLocateRegistry.getRegistry();
+			rc = MyLocateRegistry.getRegistry(this.registryNodeAddress, this.registryPort);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -215,9 +219,9 @@ public class DispatchNode {
 		if (args.length == 0) {
 			DispatchNode dispatchNode = new DispatchNode();
 			dispatchNode.start();
-		} else if (args.length == 3) {
+		} else if (args.length == 4) {
 			DispatchNode dispatchNode = new DispatchNode(args[0],
-					Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+					Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]));
 			dispatchNode.start();
 		}
 	}
